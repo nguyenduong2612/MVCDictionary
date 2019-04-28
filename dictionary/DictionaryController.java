@@ -14,48 +14,52 @@ public class DictionaryController{
 		// add action listener to each button, the parameter is and object of a action handler class
 		// the class has one method that will be called automatically when the action occurs
 
-		dicView.searchButton.addSearchListener(new searchListener());
-		dicView.addButton.addAddListener(new addListener());
-		dicView.deleteButton.addDeleteListener(new deleteListener());
+		this.dicView.addSearchListener(new searchListener());
+		// dicView.addButton.addAddListener(new addListener());
+		// dicView.deleteButton.addDeleteListener(new deleteListener());
 	}
 
-	private class searchListener implements ActionListener{
+	public class searchListener implements ActionListener{
+		private String meaning;
 		public void actionPerformed(ActionEvent event){
-			try{
-				String word = dicView.getSearchWord();
-				dicModel.searchForWord(word);
-				dicView.setMeaning(dicModel.getMeaning());
-			}
-			catch(/* need some error*/){
-				// handle the error
-			}
+			String word = dicView.getSearchWord();
+			meaning = dicModel.searchForWord(word);
+			dicView.setMeaning(meaning);
+			// try{
+			// 	String word = dicView.getSearchWord();
+			// 	meaning = dicModel.searchForWord(word);
+			// 	dicView.setMeaning(meaning);
+			// }
+			// catch(/* need some error*/){
+			// 	// handle the error
+			// }
 		}
 	}
 
-	private class addListener implements ActionListener{
-		public void actionPerformed(ActionEvent event){
-			try{
-				String word = dicView.getAddWord();
-				String meaning = dicView.getMeaning();
-				dicModel.addWord(word, meaning);
-				dicView.setNoti(dicModel.getNoti()); // noti if adding word succeeded or not 
-			}
-			catch(/* need some error*/){
-				// handle the error
-			}
-		}
-	}
+	// private class addListener implements ActionListener{
+	// 	public void actionPerformed(ActionEvent event){
+	// 		try{
+	// 			String word = dicView.getAddWord();
+	// 			String meaning = dicView.getMeaning();
+	// 			dicModel.addWord(word, meaning);
+	// 			// dicView.setNoti(dicModel.getNoti()); // noti if adding word succeeded or not 
+	// 		}
+	// 		catch(/* need some error*/){
+	// 			// handle the error
+	// 		}
+	// 	}
+	// }
 
-	private class deleteListener implements ActionListener{
-		public void actionPerformed(ActionEvent event){
-			try{
-				String word = dicView.getDeletehWord();
-				dicModel.deleteWord(word);
-				dicView.setNoti(dicModel.getNoti()); // noti the deleting process
-			}
-			catch(/* need some error*/){
-				// handle the error
-			}
-		}
-	}
+	// private class deleteListener implements ActionListener{
+	// 	public void actionPerformed(ActionEvent event){
+	// 		try{
+	// 			String word = dicView.getDeletehWord();
+	// 			// dicModel.deleteWord(word);
+	// 			// dicView.setNoti(dicModel.getNoti()); // noti the deleting process
+	// 		}
+	// 		catch(/* need some error*/){
+	// 			// handle the error
+	// 		}
+	// 	}
+	// }
 }

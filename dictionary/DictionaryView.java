@@ -3,79 +3,79 @@
 // It performs no calculations, but instead passes
 // information entered by the user to whomever needs
 // it. 
-package calculator;
+package dictionary;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-public class CalculatorView extends JFrame{
+public class DictionaryView extends JFrame{
 
-	private JTextField firstNumber  = new JTextField(10);
-	private JLabel additionLabel = new JLabel("+");
-	private JTextField secondNumber = new JTextField(10);
-	private JButton calculateButton = new JButton("Calculate");
-	private JTextField calcSolution = new JTextField(10);
+	private JTextField searchWord  = new JTextField(15);
+	// private JLabel additionLabel = new JLabel("+");
+	// private JTextField secondNumber = new JTextField(10);
+	protected JButton searchButton = new JButton("Search");
+	protected JTextField meaning = new JTextField(30);
 	
-	CalculatorView(){
+	DictionaryView(){
 		
 		// Sets up the view and adds the components
 		
-		JPanel calcPanel = new JPanel();
+		JPanel dicPanel = new JPanel();
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(600, 200);
+		this.setSize(1000, 500);
 		
-		calcPanel.add(firstNumber);
-		calcPanel.add(additionLabel);
-		calcPanel.add(secondNumber);
-		calcPanel.add(calculateButton);
-		calcPanel.add(calcSolution);
+		// calcPanel.add(firstNumber);
+		// calcPanel.add(additionLabel);
+		dicPanel.add(meaning);
+		dicPanel.add(searchWord);
+		dicPanel.add(searchButton);
 		
-		this.add(calcPanel);
+		this.add(dicPanel);
 		
 		// End of setting up the components --------
 		
 	}
 	
-	public int getFirstNumber(){
+	public String getSearchWord(){
 		
-		return Integer.parseInt(firstNumber.getText());
-		
-	}
-	
-	public int getSecondNumber(){
-		
-		return Integer.parseInt(secondNumber.getText());
+		return (searchWord.getText());
 		
 	}
 	
-	public int getCalcSolution(){
+	// public int getSecondNumber(){
 		
-		return Integer.parseInt(calcSolution.getText());
+	// 	return Integer.parseInt(secondNumber.getText());
 		
-	}
+	// }
 	
-	public void setCalcSolution(int solution){
+	// public int getCalcSolution(){
 		
-		calcSolution.setText(Integer.toString(solution));
+	// 	return Integer.parseInt(calcSolution.getText());
+		
+	// }
+	
+	public void setMeaning(String meaning){
+		
+		this.meaning.setText(meaning);
 		
 	}
 	
 	// If the calculateButton is clicked execute a method
 	// in the Controller named actionPerformed
 	
-	void addCalculateListener(ActionListener listenForCalcButton){
+	public void addSearchListener(ActionListener listenForSearchButton){
 		
-		calculateButton.addActionListener(listenForCalcButton);
+		this.searchButton.addActionListener(listenForSearchButton);
 		
 	}
 	
 	// Open a popup that contains the error message passed
 	
-	void displayErrorMessage(String errorMessage){
+	// void displayErrorMessage(String errorMessage){
 		
-		JOptionPane.showMessageDialog(this, errorMessage);
+	// 	JOptionPane.showMessageDialog(this, errorMessage);
 		
-	}
+	// }
 	
 }
