@@ -4,56 +4,37 @@
 // information entered by the user to whomever needs
 // it. 
 package dictionary;
-import java.awt.event.ActionListener;
-
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 public class DictionaryView extends JFrame{
 
 	private JTextField searchWord  = new JTextField(15);
-	// private JLabel additionLabel = new JLabel("+");
-	// private JTextField secondNumber = new JTextField(10);
 	protected JButton searchButton = new JButton("Search");
-	protected JTextField meaning = new JTextField(30);
-	
-	DictionaryView(){
-		
-		// Sets up the view and adds the components
-		
+	protected JTextArea meaning = new JTextArea(10, 10);
+
+	DictionaryView(){	
+
 		JPanel dicPanel = new JPanel();
-		
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(1000, 500);
-		
-		// calcPanel.add(firstNumber);
-		// calcPanel.add(additionLabel);
-		dicPanel.add(meaning);
-		dicPanel.add(searchWord);
-		dicPanel.add(searchButton);
-		
 		this.add(dicPanel);
-		
-		// End of setting up the components --------
+		this.setSize(600,400);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		dicPanel.add(searchWord);
+		searchButton.addSearchListener();
+		dicPanel.add(searchButton);
+		meaning.setEditable(false);
+		dicPanel.add(meaning);
+		this.setVisible(true);
 		
 	}
 	
 	public String getSearchWord(){
 		
-		return (searchWord.getText());
+		return (searchhWord.getText());
 		
 	}
 	
-	// public int getSecondNumber(){
-		
-	// 	return Integer.parseInt(secondNumber.getText());
-		
-	// }
-	
-	// public int getCalcSolution(){
-		
-	// 	return Integer.parseInt(calcSolution.getText());
-		
-	// }
 	
 	public void setMeaning(String meaning){
 		
@@ -77,5 +58,4 @@ public class DictionaryView extends JFrame{
 	// 	JOptionPane.showMessageDialog(this, errorMessage);
 		
 	// }
-	
 }

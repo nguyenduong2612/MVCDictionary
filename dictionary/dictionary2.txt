@@ -1,0 +1,16 @@
+@a font /ɑ:'fɜ:ɳ/
+*  phó từ
+- thấu triệt, cặn kẽ, rõ ngọn nghành
+
+@a fortiori /'ei,fɔ:ti'ɔ:rai/
+*  phó từ
+- huống hồ, huống là
+
+@a la carte /'ɑ:lɑ:'kɑ:t/
+*  phó từ
+- theo món, gọi theo món, đặt theo món
+=to dine a_la_carte+ ăn cơm gọi theo món
+
+@a la mode /,ɑ:lə'moud/
+*  phó từ
+- hợp thời trang, đúng mốt
