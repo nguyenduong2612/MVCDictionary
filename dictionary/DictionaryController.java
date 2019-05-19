@@ -1,6 +1,7 @@
 package dictionary;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.*;
 
 
 public class DictionaryController{
@@ -14,9 +15,19 @@ public class DictionaryController{
 		// add action listener to each button, the parameter is and object of a action handler class
 		// the class has one method that will be called automatically when the action occurs
 
-		this.dicView.addSearchListener(new searchListener());
+		// this.dicView.addSearchListener(new searchListener());
+		this.dicView.addPartialListener(new partialListener());
 		// dicView.addButton.addAddListener(new addListener());
 		// dicView.deleteButton.addDeleteListener(new deleteListener());
+	}
+
+	public class partialListener implements ActionListener{
+		private Set<String> wordList;
+		public void actionPerformed(ActionEvent event){
+			String partial = dicView.getSearchWord();
+			wordList = dicModel.getPartial(partial);
+			dicView.updateList(wordList);
+		}
 	}
 
 	public class searchListener implements ActionListener{

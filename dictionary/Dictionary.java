@@ -9,7 +9,7 @@ class Dictionary{
 		DictionaryController theController = new DictionaryController(theView, theModel);
 		Dictionary dictionary = new Dictionary();
 
-		// theModel.createTreeMap();
+		theModel.createTreeMap();
 		// System.out.println(dictionary.findWord("dog"));
 		// dictionary.viewTreeMap();
 		

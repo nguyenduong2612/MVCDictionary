@@ -77,7 +77,32 @@ public class DictionaryModel{
 
 	}
 
+	public <V> SortedMap<String, V> filterPrefix(TreeMap<String,V> baseMap, String prefix) {
+	    if(prefix.length() > 0) {
+	        char nextLetter = (char)((int)prefix.charAt(prefix.length() -1) + 1);
+	        String end = prefix.substring(0, prefix.length()-1) + nextLetter;
+	        return baseMap.subMap(prefix, end);
+	    }
+	    return baseMap;
+	}
+
+	Set<String> getPartial(String prefix){
+		// String[] wordList;
+		// for(Map.Entry<String,String> entry : filterPrefix(treeMap, prefix).entrySet()) {
+		//     System.out.println(entry.getKey());
+		// }
+		return(filterPrefix(treeMap, prefix).keySet());
+
+	}
+
 	String searchForWord(String word){
 		return treeMap.get(word);
 	}
+
+	// public static void main(String args[]){
+	// 	DictionaryModel obj = new DictionaryModel();
+	// 	System.out.println("shit");
+	// 	obj.createTreeMap();
+	// 	obj.getPartial();
+	// }
 }
