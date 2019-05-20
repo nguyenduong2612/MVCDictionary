@@ -7,12 +7,15 @@ public class DictionaryModel{
 	TreeMap<String, String> treeMap = new TreeMap<>();
 	String line, word, translation;
 	BufferedReader inBr;
-	File file = new File("/home/son/Downloads/oop/MVCDictionary/dictionary/dictionary.txt");
+	BufferedWriter outBr;
+	File file = new File("/home/son/Downloads/oop/MVCDictionary/dictionary/dictionaryOut.txt");
+	// File out = new File("/home/son/Downloads/oop/MVCDictionary/dictionary/dictionaryOut.txt");
 
 	DictionaryModel(){
 		this.translation = "";
 		try{
 			this.inBr = new BufferedReader(new FileReader(this.file));
+			// this.outBr = new BufferedWriter(new FileWriter(this.out));
 			}
 		catch(IOException e){
 			e.getMessage();
@@ -25,7 +28,12 @@ public class DictionaryModel{
 		String[] strCopy, strCopy2;
 		strCopy = word.split("@");
 		strCopy2 = strCopy[1].split("/");
-		str = strCopy2[0].substring(0, strCopy2[0].length() - 1);
+		int len = strCopy2[0].length();
+		if(strCopy2[0].charAt(len-1) == ' '){
+			str = strCopy2[0].substring(0, strCopy2[0].length() - 1);
+		}else{
+			str = strCopy2[0];
+		}
 		return str;
 	}
 	// create treemap 
@@ -33,7 +41,7 @@ public class DictionaryModel{
 	    int i;
 	    int first_word_flag = 1;
 	    int word_count = 0;
-
+	    String currentTranlation;
 	    try{
 			do{
 				line = (inBr.readLine());
@@ -47,12 +55,21 @@ public class DictionaryModel{
 			            if(first_word_flag == 0)
 			            {
 			            	// System.out.println(this.word + "======" + this.translation);
-			                treeMap.put(word, translation);
+			            	if((currentTranlation = treeMap.get(word)) != null){
+			            		currentTranlation += translation;
+			            		treeMap.put(word, currentTranlation);
+			            	}else{
+			                	treeMap.put(word, translation);
+			                }
 			                translation = "";
+			                currentTranlation = "";
 			            }
 			            word = word_handle(line);
 			            first_word_flag = 0;
 			            word_count++;
+			            if(!translation.equals(""))
+			        		translation += "\n";
+			            translation += line;
 			        }
 			        else{
 			        	if(!translation.equals(""))
@@ -101,10 +118,26 @@ public class DictionaryModel{
 		return treeMap.get(word);
 	}
 
+
+	public void writeToFile(){
+		try{
+			for (Map.Entry<String, String> entry : treeMap.entrySet()) {
+			    // System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue()); //this statement prints out my keys and values
+			    outBr.write(entry.getValue());
+			    outBr.write("\n");
+			    System.out.println("Done");
+			    outBr.flush();   // Flush the buffer and write all changes to the disk
+			}
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
+	}
 	// public static void main(String args[]){
 	// 	DictionaryModel obj = new DictionaryModel();
 	// 	System.out.println("shit");
 	// 	obj.createTreeMap();
-	// 	obj.getPartial();
+	// 	// obj.getPartial();
+	// 	obj.writeToFile();
 	// }
 }
