@@ -17,28 +17,26 @@ import java.awt.Insets;
 
 import javax.swing.*;
 
-public class DictionaryView extends JFrame{
+class DictionaryViewFrame{
 
 	protected JTextField searchWord  = new JTextField(15);		// get user input word
-	protected JButton searchButton = new JButton("Search");		// search button
+	protected JButton searchButton;		// search button
 	protected JTextArea meaning = new JTextArea(10, 10);		// translation field
 	JPanel dicPanel = new JPanel();
 	GridBagConstraints gbc = new GridBagConstraints();
 	String[] blankArr = {""};	// blank array to reset suggestion list when no word is typed
 	JList<String> wordList = new JList<String>(blankArr);	// word suggestion list
 	JScrollPane list, translation;	// scroll pane of suggestion list and translation field
-	DictionaryView(){	
-		this.setSize(600,400);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setLocationRelativeTo(null);
-		this.setTitle("Dictionary");
-		this.getContentPane().setForeground(Color.YELLOW);
-		JPanel searchPanel = new JPanel();
+
+	DictionaryViewFrame(String buttonName, boolean textAreaEditable, boolean showList){	
+		
+		// JPanel searchPanel = new JPanel();
 		// searchPanel.add(searchButton);
 
 		//**********************************SETUP VIEW**************************************8
 		
 		/* text field to type word into */
+		searchButton = new JButton(buttonName);
 		dicPanel.setLayout(new GridBagLayout());
 		gbc.insets = new Insets(5,5,5,5);		
 		gbc.weightx = 250;
@@ -67,7 +65,7 @@ public class DictionaryView extends JFrame{
 		// dicPanel.add(blankPanel, gbc);
 		// gbc.fill = GridBagConstraints.NONE;
 		dicPanel.add(searchButton, gbc);
-
+		// deletePanel.add(deleteButton, gbc);
 
 		/*word list for suggestion*/
 		gbc.gridx = 0;
@@ -78,10 +76,13 @@ public class DictionaryView extends JFrame{
 		gbc.weighty = 500;
 		gbc.fill = GridBagConstraints.BOTH;
 		list = new JScrollPane(wordList);
-		dicPanel.add(list, gbc);
+		if(showList){
+			dicPanel.add(list, gbc);
+		}
+		// deletePanel.add(list, gbc);
 
 		/*translation*/
-		meaning.setEditable(false);
+		meaning.setEditable(textAreaEditable);
 		meaning.setLineWrap(true);				
 		meaning.setWrapStyleWord(true);
 
@@ -94,10 +95,10 @@ public class DictionaryView extends JFrame{
 		gbc.gridheight = 1;
 		translation = new JScrollPane(meaning);
 		dicPanel.add(translation, gbc);
+		// deletePanel.add(translation, gbc);
 
-
-		this.add(dicPanel);
-		this.setVisible(true);
+		// this.add(dicPanel);
+		// this.setVisible(true);
 	}
 	
 	/*function to get current word in search box to send to model via controller*/
@@ -111,6 +112,7 @@ public class DictionaryView extends JFrame{
 	public void setMeaning(String meaning){
 		
 		this.meaning.setText(meaning);
+		this.meaning.setCaretPosition(0);
 		
 	}
 	
@@ -130,9 +132,9 @@ public class DictionaryView extends JFrame{
 	}
 	
 	/*function to add listener to search button, listen to search button being pressed*/
-	public void addSearchListener(ActionListener listenForSearchButton){
+	public void addButtonListener(ActionListener listenForButton){
 		
-		this.searchButton.addActionListener(listenForSearchButton);
+		this.searchButton.addActionListener(listenForButton);
 		
 	}
 
@@ -158,4 +160,31 @@ public class DictionaryView extends JFrame{
 	// public static void main(String args[]){
 	// 	new DictionaryView();
 	// }
+}
+
+
+public class DictionaryView extends JFrame{
+	JTabbedPane tabbedPane = new JTabbedPane();
+	DictionaryViewFrame search = new DictionaryViewFrame("Search", false, true);
+	DictionaryViewFrame delete = new DictionaryViewFrame("Delete", false, true);
+	DictionaryViewFrame add = new DictionaryViewFrame("Add", true, false);
+
+	public DictionaryView(){
+		this.setSize(600,400);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setLocationRelativeTo(null);
+		this.setTitle("Dictionary");
+		this.getContentPane().setForeground(Color.YELLOW);
+
+		tabbedPane.addTab("SEARCH", search.dicPanel);
+		tabbedPane.addTab("DELETE", delete.dicPanel);
+		tabbedPane.addTab("ADD", add.dicPanel);
+		this.add(tabbedPane);
+		this.setVisible(true);
+		
+	}
+
+	public static void main(String[] args){
+		new DictionaryView();
+	}
 }

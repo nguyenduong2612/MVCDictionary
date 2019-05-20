@@ -9,13 +9,12 @@ public class DictionaryModel{
 	BufferedReader inBr;
 	BufferedWriter outBr;
 	File file = new File("/home/son/Downloads/oop/MVCDictionary/dictionary/dictionaryOut.txt");
-	// File out = new File("/home/son/Downloads/oop/MVCDictionary/dictionary/dictionaryOut.txt");
+	File out = new File("/home/son/Downloads/oop/MVCDictionary/dictionary/dictionaryOut.txt");
 
 	DictionaryModel(){
 		this.translation = "";
 		try{
 			this.inBr = new BufferedReader(new FileReader(this.file));
-			// this.outBr = new BufferedWriter(new FileWriter(this.out));
 			}
 		catch(IOException e){
 			e.getMessage();
@@ -118,9 +117,18 @@ public class DictionaryModel{
 		return treeMap.get(word);
 	}
 
+	public void deleteWord(String key){
+		treeMap.remove(key);
+	}
+
+	public void addWord(String key, String value){
+		String valueNew = "@"+key+"\n"+value;
+		treeMap.put(key, valueNew);
+	}
 
 	public void writeToFile(){
 		try{
+			this.outBr = new BufferedWriter(new FileWriter(this.out));
 			for (Map.Entry<String, String> entry : treeMap.entrySet()) {
 			    // System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue()); //this statement prints out my keys and values
 			    outBr.write(entry.getValue());

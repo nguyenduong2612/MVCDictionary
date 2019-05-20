@@ -16,9 +16,13 @@ public class DictionaryController{
 		this.dicModel = model;
 
 		/*add necessary listener to element in the view*/
-		this.dicView.addSearchListener(new searchListener());
-		this.dicView.addPartialListener(new partialListener());
-		this.dicView.addListListener(new listSelectionListener());
+		this.dicView.search.addButtonListener(new searchListener(dicView.search));
+		this.dicView.search.addPartialListener(new partialListener(dicView.search));
+		this.dicView.search.addListListener(new listSelectionListener(dicView.search));
+		this.dicView.delete.addButtonListener(new deleteListener(dicView.delete));
+		this.dicView.delete.addPartialListener(new partialListener(dicView.delete));
+		this.dicView.delete.addListListener(new listSelectionListener(dicView.delete));
+		this.dicView.add.addButtonListener(new addListener(dicView.add));
 		// dicView.addButton.addAddListener(new addListener());
 		// dicView.deleteButton.addDeleteListener(new deleteListener());
 	}
@@ -43,23 +47,32 @@ public class DictionaryController{
 	public class partialListener extends KeyAdapter{
 		private Set<String> wordList;
 		private String meaning;
+		private DictionaryViewFrame obj;
+		partialListener(DictionaryViewFrame obj){
+			this.obj = obj;
+		}
 		public void keyPressed(KeyEvent event){
 			char c = event.getKeyChar();
-			String partial = dicView.getSearchWord();
+			String partial = obj.getSearchWord();
 			
 			if(isAccepted(c)){
 				wordList = dicModel.getPartial(partial+c);
-				dicView.updateList(wordList);
+				obj.updateList(wordList);
 			}else if(c == 8){
 				if(partial.length() == 1){
-					dicView.resetList();
+					obj.resetList();
 				}else{
 					wordList = dicModel.getPartial(partial.substring(0, partial.length() - 1));
-					dicView.updateList(wordList);
+					obj.updateList(wordList);
 				}
 			}else if(c == event.VK_ENTER){
 				meaning = dicModel.searchForWord(partial);
-				dicView.setMeaning(meaning);
+				obj.setMeaning(meaning);
+			}
+			else if(c == event.VK_DOWN){
+				// meaning = dicModel.searchForWord(partial);
+				// obj.setMeaning(meaning);
+				obj.wordList.setSelectedIndex(0);
 			}
 			
 			
@@ -69,14 +82,18 @@ public class DictionaryController{
 	/*action when search button is pressed*/
 	public class searchListener implements ActionListener{
 		private String meaning;
+		private DictionaryViewFrame obj;
+		searchListener(DictionaryViewFrame obj){
+			this.obj = obj;
+		}
 		public void actionPerformed(ActionEvent event){
-			String word = dicView.getSearchWord();
+			String word = obj.getSearchWord();
 			meaning = dicModel.searchForWord(word);
-			dicView.setMeaning(meaning);
+			obj.setMeaning(meaning);
 			// try{
-			// 	String word = dicView.getSearchWord();
+			// 	String word = obj.getSearchWord();
 			// 	meaning = dicModel.searchForWord(word);
-			// 	dicView.setMeaning(meaning);
+			// 	obj.setMeaning(meaning);
 			// }
 			// catch(/* need some error*/){
 			// 	// handle the error
@@ -86,45 +103,64 @@ public class DictionaryController{
 	/*action when an item of list is selected*/
 	public class listSelectionListener implements ListSelectionListener{
 		private String meaning;
+		private DictionaryViewFrame obj;
+		listSelectionListener(DictionaryViewFrame obj){
+			this.obj = obj;
+		}
 		public void valueChanged(ListSelectionEvent le) {
-		    String word = dicView.wordList.getSelectedValue();
+		    String word = obj.wordList.getSelectedValue();
 		    if (word != null) {
 		    	// String word = name[idx];
 		      System.out.println("Current selection: " + word);
 		      // search for word, set text to jtext
-		      dicView.searchWord.setText(word);
+		      obj.searchWord.setText(word);
 		      meaning = dicModel.searchForWord(word);
-			  dicView.setMeaning(meaning);
+			  obj.setMeaning(meaning);
 		    } else {
 		      System.out.println("Please choose a name");
 		    }
 		  }
 	}
 	
-	// private class addListener implements ActionListener{
-	// 	public void actionPerformed(ActionEvent event){
-	// 		try{
-	// 			String word = dicView.getAddWord();
-	// 			String meaning = dicView.getMeaning();
-	// 			dicModel.addWord(word, meaning);
-	// 			// dicView.setNoti(dicModel.getNoti()); // noti if adding word succeeded or not 
-	// 		}
-	// 		catch(/* need some error*/){
-	// 			// handle the error
-	// 		}
-	// 	}
-	// }
-
-	// private class deleteListener implements ActionListener{
-	// 	public void actionPerformed(ActionEvent event){
-	// 		try{
-	// 			String word = dicView.getDeletehWord();
-	// 			// dicModel.deleteWord(word);
-	// 			// dicView.setNoti(dicModel.getNoti()); // noti the deleting process
-	// 		}
-	// 		catch(/* need some error*/){
-	// 			// handle the error
-	// 		}
-	// 	}
-	// }
+	public class deleteListener implements ActionListener{
+		private DictionaryViewFrame obj;
+		deleteListener(DictionaryViewFrame obj){
+			this.obj = obj;
+		}
+		public void actionPerformed(ActionEvent event){
+			int selection = JOptionPane.showConfirmDialog(null, "Do you really want to delete: " + obj.searchWord.getText(), "Confirm Delete", 2);
+			if(selection == JOptionPane.OK_OPTION){
+				dicModel.deleteWord(obj.searchWord.getText());
+				dicModel.writeToFile();
+				System.out.println("ok selected");
+			
+			} else if(selection == JOptionPane.CANCEL_OPTION){
+				System.out.println("cancel selected");
+			}
+		}
+	}
+	public class addListener implements ActionListener{
+		private DictionaryViewFrame obj;
+		String value, key;
+		addListener(DictionaryViewFrame obj){
+			this.obj = obj;
+		}
+		public void actionPerformed(ActionEvent event){
+			key = obj.searchWord.getText();
+			value = obj.meaning.getText();
+			if((key.length() == 0) && (value.length() == 0)){
+				JOptionPane.showMessageDialog(null, "No empty field allowed!", "ERROR ADDING", JOptionPane.INFORMATION_MESSAGE);
+			}else{
+				int selection = JOptionPane.showConfirmDialog(null, "Do you really want to add: " + key, "Confirm Delete", 2);
+				if(selection == JOptionPane.OK_OPTION){
+					dicModel.addWord(key, value);
+					dicModel.writeToFile();
+					System.out.println("ok selected");
+				
+				} else if(selection == JOptionPane.CANCEL_OPTION){
+					System.out.println("cancel selected");
+				}
+			}
+		}
+	}
 }
