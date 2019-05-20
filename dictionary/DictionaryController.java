@@ -1,6 +1,9 @@
 package dictionary;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import javax.swing.*;
+import javax.swing.event.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 
 
@@ -15,18 +18,51 @@ public class DictionaryController{
 		// add action listener to each button, the parameter is and object of a action handler class
 		// the class has one method that will be called automatically when the action occurs
 
-		// this.dicView.addSearchListener(new searchListener());
+		this.dicView.addSearchListener(new searchListener());
 		this.dicView.addPartialListener(new partialListener());
+		this.dicView.addListListener(new listSelectionListener());
 		// dicView.addButton.addAddListener(new addListener());
 		// dicView.deleteButton.addDeleteListener(new deleteListener());
 	}
 
-	public class partialListener implements ActionListener{
+	// public class partialListener implements ActionListener{
+	// 	private Set<String> wordList;
+	// 	public void actionPerformed(ActionEvent event){
+	// 		String partial = dicView.getSearchWord();
+	// 		wordList = dicModel.getPartial(partial);
+	// 		dicView.updateList(wordList);
+	// 	}
+	// }
+	private boolean isAccepted(char c){
+		if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == '-') || c == '_' || c == '.' || c == ',' || c == '\'' || c == ' '){
+			return (true);
+		}
+		return (false);
+	}
+
+	public class partialListener extends KeyAdapter{
 		private Set<String> wordList;
-		public void actionPerformed(ActionEvent event){
+		private String meaning;
+		public void keyPressed(KeyEvent event){
+			char c = event.getKeyChar();
 			String partial = dicView.getSearchWord();
-			wordList = dicModel.getPartial(partial);
-			dicView.updateList(wordList);
+			
+			if(isAccepted(c)){
+				wordList = dicModel.getPartial(partial+c);
+				dicView.updateList(wordList);
+			}else if(c == 8){
+				if(partial.length() == 1){
+					dicView.resetList();
+				}else{
+					wordList = dicModel.getPartial(partial.substring(0, partial.length() - 1));
+					dicView.updateList(wordList);
+				}
+			}else if(c == event.VK_ENTER){
+				meaning = dicModel.searchForWord(partial);
+				dicView.setMeaning(meaning);
+			}
+			
+			
 		}
 	}
 
@@ -46,7 +82,23 @@ public class DictionaryController{
 			// }
 		}
 	}
-
+	public class listSelectionListener implements ListSelectionListener{
+		private String meaning;
+		public void valueChanged(ListSelectionEvent le) {
+		    String word = dicView.wordList.getSelectedValue();
+		    if (word != null) {
+		    	// String word = name[idx];
+		      System.out.println("Current selection: " + word);
+		      // search for word, set text to jtext
+		      dicView.searchWord.setText(word);
+		      meaning = dicModel.searchForWord(word);
+			  dicView.setMeaning(meaning);
+		    } else {
+		      System.out.println("Please choose a name");
+		    }
+		  }
+	}
+	
 	// private class addListener implements ActionListener{
 	// 	public void actionPerformed(ActionEvent event){
 	// 		try{

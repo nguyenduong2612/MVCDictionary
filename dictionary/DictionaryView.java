@@ -5,7 +5,8 @@
 // it. 
 package dictionary;
 import java.util.*;
-
+import javax.swing.*;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.Font;
@@ -18,14 +19,14 @@ import javax.swing.*;
 
 public class DictionaryView extends JFrame{
 
-	private JTextField searchWord  = new JTextField(15);
+	protected JTextField searchWord  = new JTextField(15);
 	protected JButton searchButton = new JButton("Search");
 	protected JTextArea meaning = new JTextArea(10, 10);
 	JPanel dicPanel = new JPanel();
 	GridBagConstraints gbc = new GridBagConstraints();
-	String[] words = {""};
-	JList<String> wordList = new JList<String>(words);
-		
+	String[] blankArr = {""};
+	JList<String> wordList = new JList<String>(blankArr);
+	JScrollPane list, translation;
 	DictionaryView(){	
 		this.setSize(600,400);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,9 +72,13 @@ public class DictionaryView extends JFrame{
 		gbc.weightx = 250;
 		gbc.weighty = 500;
 		gbc.fill = GridBagConstraints.BOTH;
-		dicPanel.add(wordList, gbc);
+		list = new JScrollPane(wordList);
+		dicPanel.add(list, gbc);
 
 		meaning.setEditable(false);
+		meaning.setLineWrap(true);				
+		meaning.setWrapStyleWord(true);
+		
 		gbc.gridx = 1;
 		gbc.gridy = 1;
 		gbc.weightx = 500;
@@ -81,7 +86,8 @@ public class DictionaryView extends JFrame{
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridheight = 1;
-		dicPanel.add(meaning, gbc);
+		translation = new JScrollPane(meaning);
+		dicPanel.add(translation, gbc);
 
 
 		this.add(dicPanel);
@@ -106,7 +112,12 @@ public class DictionaryView extends JFrame{
 		// Object[] array = wordList.toArray();
 		String[] words = new String[wordList.size()];
 		words = wordList.toArray(words);
+		// this.wordList.setListData(Arrays.copyOfRange(words, 0, 10));
 		this.wordList.setListData(words);		
+	}
+
+	public void resetList(){
+		this.wordList.setListData(blankArr);		
 	}
 	// If the calculateButton is clicked execute a method
 	// in the Controller named actionPerformed
@@ -117,10 +128,14 @@ public class DictionaryView extends JFrame{
 		
 	}
 
-	public void addPartialListener(ActionListener listenForSearchButton){
+	public void addPartialListener(KeyListener listenForPartial){
 		
-		this.searchButton.addActionListener(listenForSearchButton);
+		this.searchWord.addKeyListener(listenForPartial);
 		
+	}
+
+	public void addListListener(ListSelectionListener listener){
+		this.wordList.addListSelectionListener(listener);
 	}
 	
 	// Open a popup that contains the error message passed
