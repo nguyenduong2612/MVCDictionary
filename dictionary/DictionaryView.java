@@ -19,14 +19,14 @@ import javax.swing.*;
 
 public class DictionaryView extends JFrame{
 
-	protected JTextField searchWord  = new JTextField(15);
-	protected JButton searchButton = new JButton("Search");
-	protected JTextArea meaning = new JTextArea(10, 10);
+	protected JTextField searchWord  = new JTextField(15);		// get user input word
+	protected JButton searchButton = new JButton("Search");		// search button
+	protected JTextArea meaning = new JTextArea(10, 10);		// translation field
 	JPanel dicPanel = new JPanel();
 	GridBagConstraints gbc = new GridBagConstraints();
-	String[] blankArr = {""};
-	JList<String> wordList = new JList<String>(blankArr);
-	JScrollPane list, translation;
+	String[] blankArr = {""};	// blank array to reset suggestion list when no word is typed
+	JList<String> wordList = new JList<String>(blankArr);	// word suggestion list
+	JScrollPane list, translation;	// scroll pane of suggestion list and translation field
 	DictionaryView(){	
 		this.setSize(600,400);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -35,7 +35,10 @@ public class DictionaryView extends JFrame{
 		this.getContentPane().setForeground(Color.YELLOW);
 		JPanel searchPanel = new JPanel();
 		// searchPanel.add(searchButton);
+
+		//**********************************SETUP VIEW**************************************8
 		
+		/* text field to type word into */
 		dicPanel.setLayout(new GridBagLayout());
 		gbc.insets = new Insets(5,5,5,5);		
 		gbc.weightx = 250;
@@ -50,8 +53,10 @@ public class DictionaryView extends JFrame{
 		searchWord.setBorder(null);
 		dicPanel.add(searchWord, gbc);
 
-		// gbc.anchor = GridBagConstraints.EAST;
+
+		/* search button */
 		gbc.fill = GridBagConstraints.VERTICAL;
+		// gbc.anchor = GridBagConstraints.EAST;
 		gbc.weightx = 3000;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;
@@ -63,8 +68,8 @@ public class DictionaryView extends JFrame{
 		// gbc.fill = GridBagConstraints.NONE;
 		dicPanel.add(searchButton, gbc);
 
-		// JScrollPane scrollbar1 = new JScrollPane(meaning, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		// meaning.add(scrollbar1);
+
+		/*word list for suggestion*/
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.gridwidth = 1;
@@ -75,10 +80,11 @@ public class DictionaryView extends JFrame{
 		list = new JScrollPane(wordList);
 		dicPanel.add(list, gbc);
 
+		/*translation*/
 		meaning.setEditable(false);
 		meaning.setLineWrap(true);				
 		meaning.setWrapStyleWord(true);
-		
+
 		gbc.gridx = 1;
 		gbc.gridy = 1;
 		gbc.weightx = 500;
@@ -94,20 +100,21 @@ public class DictionaryView extends JFrame{
 		this.setVisible(true);
 	}
 	
-
+	/*function to get current word in search box to send to model via controller*/
 	public String getSearchWord(){
 		
 		return (searchWord.getText());
 		
 	}
 	
-	
+	/*function to set translation received from model via controller*/
 	public void setMeaning(String meaning){
 		
 		this.meaning.setText(meaning);
 		
 	}
 	
+	/*function to update suggestion list when user type a new character*/
 	public void updateList(Set<String> wordList){
 		// Object[] array = wordList.toArray();
 		String[] words = new String[wordList.size()];
@@ -116,24 +123,27 @@ public class DictionaryView extends JFrame{
 		this.wordList.setListData(words);		
 	}
 
+
+	/*function to reset list to blank when there is no character in search box*/
 	public void resetList(){
 		this.wordList.setListData(blankArr);		
 	}
-	// If the calculateButton is clicked execute a method
-	// in the Controller named actionPerformed
 	
+	/*function to add listener to search button, listen to search button being pressed*/
 	public void addSearchListener(ActionListener listenForSearchButton){
 		
 		this.searchButton.addActionListener(listenForSearchButton);
 		
 	}
 
+	/*function to add listener to search box, listen to a key being pressed and update suggestion list*/
 	public void addPartialListener(KeyListener listenForPartial){
 		
 		this.searchWord.addKeyListener(listenForPartial);
 		
 	}
 
+	/*function to add listener to suggestion list, listen to an item being selected => update search box and set meaning*/
 	public void addListListener(ListSelectionListener listener){
 		this.wordList.addListSelectionListener(listener);
 	}

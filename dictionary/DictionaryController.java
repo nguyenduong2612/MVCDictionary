@@ -15,9 +15,7 @@ public class DictionaryController{
 		this.dicView = view;
 		this.dicModel = model;
 
-		// add action listener to each button, the parameter is and object of a action handler class
-		// the class has one method that will be called automatically when the action occurs
-
+		/*add necessary listener to element in the view*/
 		this.dicView.addSearchListener(new searchListener());
 		this.dicView.addPartialListener(new partialListener());
 		this.dicView.addListListener(new listSelectionListener());
@@ -33,6 +31,7 @@ public class DictionaryController{
 	// 		dicView.updateList(wordList);
 	// 	}
 	// }
+	/*check whether a character pressed is a valid one and add to the current word in search box*/
 	private boolean isAccepted(char c){
 		if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == '-') || c == '_' || c == '.' || c == ',' || c == '\'' || c == ' '){
 			return (true);
@@ -40,6 +39,7 @@ public class DictionaryController{
 		return (false);
 	}
 
+	/*handle action when a key is pressed*/
 	public class partialListener extends KeyAdapter{
 		private Set<String> wordList;
 		private String meaning;
@@ -66,6 +66,7 @@ public class DictionaryController{
 		}
 	}
 
+	/*action when search button is pressed*/
 	public class searchListener implements ActionListener{
 		private String meaning;
 		public void actionPerformed(ActionEvent event){
@@ -82,6 +83,7 @@ public class DictionaryController{
 			// }
 		}
 	}
+	/*action when an item of list is selected*/
 	public class listSelectionListener implements ListSelectionListener{
 		private String meaning;
 		public void valueChanged(ListSelectionEvent le) {
